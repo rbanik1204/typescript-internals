@@ -9,10 +9,10 @@
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
     "target": "esnext",
-    "types": [],
+    // "types": [],
     // For nodejs:
     // "lib": ["esnext"],
-    // "types": ["node"],
+    "types": ["node"],
     // and npm install -D @types/node
 
     // Other Outputs
@@ -22,14 +22,18 @@
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": true,
     "exactOptionalPropertyTypes": true,
 
     // Style Options
     // "noImplicitReturns": true,
-    // "noImplicitOverride": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    // "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noErrorTruncation": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowUnusedLabels": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
     // "noPropertyAccessFromIndexSignature": true,
 
     // Recommended Options
@@ -39,6 +43,6 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
+    "skipLibCheck": true
   }
 }
