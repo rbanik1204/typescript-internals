@@ -11,12 +11,13 @@
     "url": "git+https://github.com/rbanik1204/typescript-internals.git"
   },
   "keywords": [],
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/rbanik1204/typescript-internals/issues"
   },
   "homepage": "https://github.com/rbanik1204/typescript-internals#readme",
   "devDependencies": {
+    "@types/node": "^26.6.6",
     "typescript": "^7.0.2"
   }
 }
