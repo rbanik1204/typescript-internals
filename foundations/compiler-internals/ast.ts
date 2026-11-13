@@ -14,7 +14,7 @@ const sourceFile = ts.createSourceFile(
   ts.ScriptTarget.Latest,
   true
 )
-
+console.log(sourceFile.statements)
 function printAST(node: ts.Node, depth = 0): void {
   const indentation = " ".repeat(depth * 2)
   console.log(
