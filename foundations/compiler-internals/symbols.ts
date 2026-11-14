@@ -21,16 +21,17 @@ function inspect(node: ts.Node): void {
       if (symbol.flags & ts.SymbolFlags.Function) {
         console.log("This is a function!")
       }
+
       if (symbol.flags & ts.SymbolFlags.BlockScopedVariable) {
         console.log("This is a let or const variable!")
       }
-
       console.log({
         symbol: symbol.getName(),
         flags: symbol.getFlags(), // whether its a variable, function or class
       })
     }
   }
+  const type
   ts.forEachChild(node, (child) => {
     inspect(child)
   })
