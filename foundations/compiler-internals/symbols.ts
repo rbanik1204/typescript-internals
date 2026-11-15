@@ -11,29 +11,55 @@ const program = ts.createProgram({
 const sourceFile = program.getSourceFile("./type-inspection.ts")! //retrieves the root AST file node for a given AST node, while asserting TS type checker that result will not be `undefined`
 if (!sourceFile) throw new Error("Source file not found!")
 
-const checker = program.getTypeChecker() //API through which we can inspect semantic informations
-console.log(checker)
+const checker = program.getTypeChecker() //API through which we can inspect semantic informations - TS brain
+function inspectType(node: ts.Node): void {
+  const type = checker.getTypeAtLocation(node) //internal type object for this AST node
+  const typeName = checker.typeToString(type) //convert the internal type Object into a human-readable string
+  const nodeText = node.getText(sourceFile) // Get the original source code text for this AST node(e.g., variable name, Numeric Literal)
+  const syntaxKind = ts.SyntaxKind[node.kind] //Get the AST syntax category name (e.g., "Identifier", "NumericLiteral")
+  console.log({
+    kind: syntaxKind,
+    text: nodeText,
+    type: typeName,
+    flags: type.getFlags(),
+  })
+  if (type.flags & ts.TypeFlags.StringLike)
+    console.log(` ->${nodeText} evaluates to string!`)
+  else if (type.flags & ts.TypeFlags.NumberLike)
+    console.log(` ->${nodeText} evaluates to number!`)
+}
 function inspect(node: ts.Node): void {
+  //tree climber
+  // Symbol inspection (for names/identifiers)
   if (ts.isIdentifier(node)) {
+    //TypeScript only binds `symbols` to Identifier nodes
     //typescript type guard
     const symbol = checker.getSymbolAtLocation(node) // Type checker to find symbol associated with this identifier AST node
     if (symbol) {
       if (symbol.flags & ts.SymbolFlags.Function) {
-        console.log("This is a function!")
+        console.log(`Symbol [${symbol.getName()}]: This is a function!`)
       }
 
       if (symbol.flags & ts.SymbolFlags.BlockScopedVariable) {
-        console.log("This is a let or const variable!")
+        console.log(
+          `Symbol [${symbol.getName()}]: This is a let or const variable!`
+        )
       }
-      console.log({
-        symbol: symbol.getName(),
-        flags: symbol.getFlags(), // whether its a variable, function or class
-      })
+      //   console.log({
+      //     symbol: symbol.getName(),
+      //     flags: symbol.getFlags(), // whether its a variable, function or class
+      //   })
     }
   }
-  const type
-  ts.forEachChild(node, (child) => {
-    inspect(child)
-  })
+  //Type Inspection : Filter out structural syntax nodes (e.g., Whole File, Empty Blocks)
+  if (
+    ts.isIdentifier(node) ||
+    ts.isVariableDeclaration(node) ||
+    ts.isCallExpression(node) ||
+    ts.isLiteralExpression(node)
+  ) {
+    inspectType(node)
+  }
+  ts.forEachChild(node, inspect)
 }
 inspect(sourceFile)
