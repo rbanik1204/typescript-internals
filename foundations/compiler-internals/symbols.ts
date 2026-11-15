@@ -13,7 +13,7 @@ if (!sourceFile) throw new Error("Source file not found!")
 
 const checker = program.getTypeChecker() //API through which we can inspect semantic informations - TS brain
 function inspectType(node: ts.Node): void {
-  const type = checker.getTypeAtLocation(node) //internal type object for this AST node
+  const type: ts.Type = checker.getTypeAtLocation(node) //internal type object for this AST node
   const typeName = checker.typeToString(type) //convert the internal type Object into a human-readable string
   const nodeText = node.getText(sourceFile) // Get the original source code text for this AST node(e.g., variable name, Numeric Literal)
   const syntaxKind = ts.SyntaxKind[node.kind] //Get the AST syntax category name (e.g., "Identifier", "NumericLiteral")
@@ -21,7 +21,7 @@ function inspectType(node: ts.Node): void {
     kind: syntaxKind,
     text: nodeText,
     type: typeName,
-    flags: type.getFlags(),
+    flags: ts.TypeFlags[type.flags],
   })
   if (type.flags & ts.TypeFlags.StringLike)
     console.log(` ->${nodeText} evaluates to string!`)
@@ -32,7 +32,7 @@ function inspect(node: ts.Node): void {
   //tree climber
   // Symbol inspection (for names/identifiers)
   if (ts.isIdentifier(node)) {
-    //TypeScript only binds `symbols` to Identifier nodes
+    //TypeScript  binds `symbols` to Identifier nodes
     //typescript type guard
     const symbol = checker.getSymbolAtLocation(node) // Type checker to find symbol associated with this identifier AST node
     if (symbol) {
