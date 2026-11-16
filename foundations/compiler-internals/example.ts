@@ -1,5 +1,1 @@
-const age: number = 22
-
-function greet(name: string): string {
-  return "hello " + name
-}
+const examples = [25, "hello", true, null]

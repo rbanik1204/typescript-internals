@@ -8,20 +8,20 @@ const program = ts.createProgram({
   },
 })
 //! ---> non-null assertion operator
-const sourceFile = program.getSourceFile("./type-inspection.ts")! //retrieves the root AST file node for a given AST node, while asserting TS type checker that result will not be `undefined`
+const sourceFile = program.getSourceFile("./type-inspection.ts")! //retrieves the root AST file node for a given file path, while asserting TS type checker that result will not be `undefined`
 if (!sourceFile) throw new Error("Source file not found!")
 
 const checker = program.getTypeChecker() //API through which we can inspect semantic informations - TS brain
 function inspectType(node: ts.Node): void {
   const type: ts.Type = checker.getTypeAtLocation(node) //internal type object for this AST node
-  const typeName = checker.typeToString(type) //convert the internal type Object into a human-readable string
-  const nodeText = node.getText(sourceFile) // Get the original source code text for this AST node(e.g., variable name, Numeric Literal)
+  const typeName: string = checker.typeToString(type) //convert the internal type Object into a human-readable string
+  const nodeText: string = node.getText(sourceFile) // Get the original source code text for this AST node(e.g., variable name, Numeric Literal)
   const syntaxKind = ts.SyntaxKind[node.kind] //Get the AST syntax category name (e.g., "Identifier", "NumericLiteral")
   console.log({
     kind: syntaxKind,
     text: nodeText,
     type: typeName,
-    flags: ts.TypeFlags[type.flags],
+    flags: ts.TypeFlags[type.flags], //internal compiler category ( or "kind") of resolved type
   })
   if (type.flags & ts.TypeFlags.StringLike)
     console.log(` ->${nodeText} evaluates to string!`)
