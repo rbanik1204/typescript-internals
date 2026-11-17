@@ -34,6 +34,7 @@ ts.forEachChild(sourceFile, (node) => {
         ts.isArrayLiteralExpression(declaration.initializer)
       ) {
         const initializerNode = declaration.initializer
+        console.log(typeof initializerNode)
         console.log({
           kind: ts.SyntaxKind[initializerNode.kind],
           rawText: initializerNode.getText(sourceFile), //Only literal tokens with a single raw value have .text prop.An array literal contains multiple expressions, not a single string.
@@ -42,6 +43,28 @@ ts.forEachChild(sourceFile, (node) => {
           pos: initializerNode.pos,
           end: initializerNode.end,
         })
+        initializerNode.elements.forEach(
+          (element: any, index: number): void => {
+            const info: Record<string, any> = {
+              index,
+              kind: ts.SyntaxKind[element.kind],
+              rawText: element.text,
+            }
+            //specific properties based on exact literal node Type
+            if (ts.isNumericLiteral(element)) {
+              info.value = Number(element.text)
+              //info.numericLiteralFlags = element.numericLiteralFlags
+            } else if (ts.isStringLiteral(element)) {
+              info.value = element.text
+              //info.singleQuote = element.singleQuote ?? false
+            } else if (element.kind === ts.SyntaxKind.TrueKeyword) {
+              info.value = true // Boolean keyword "dont have .text", only .kind
+            } else if (element.kind === ts.SyntaxKind.NullKeyword) {
+              info.value = null //Null Keyword also have "dont have .text", only .kind
+            }
+            console.log(info)
+          }
+        )
       }
     }
   }
