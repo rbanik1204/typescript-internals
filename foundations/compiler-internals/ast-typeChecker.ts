@@ -11,7 +11,9 @@ ts.forEachChild(sourceFile, (node) => {
     console.log(declaration.getText(sourceFile)) //examples = [25, "hello", true, null]
     console.log({
       kind: ts.SyntaxKind[node.kind],
+      Initializer: declaration.initializer?.getFullText(sourceFile), //Info: has no special AST node Flag set on it thats why declaration.initializer?.flags gives 0 or if human readable string then 'None'
       flags: ts.NodeFlags[declaration.parent.flags],
+      name: declaration.name.getText(sourceFile),
       parent: ts.SyntaxKind[declaration.parent.kind],
       Let: (ts.NodeFlags.Let & declaration.parent.flags) !== 0, //
       Const: (declaration.parent.flags & ts.NodeFlags.Const) !== 0,
