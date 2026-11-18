@@ -8,12 +8,12 @@ const fileName: string = "multiline-check.ts"
 const sourceFile: ts.SourceFile = ts.createSourceFile(
   fileName,
   sourceCode,
-  ts.ScriptTarget.Latest,
+  ts.ScriptTarget.Latest, // newest parser/emitter behavior without tracking yearly versions.
   true // setParentNodes: required for getting text/line info easily
 ) //retrieves the root of AST node for a file path
 const options: ts.CompilerOptions = {
   target: ts.ScriptTarget.ESNext, //Compile my output JS to bleeding-edge ECMAScript Standard
-  strict: true, //set Parent Pointers to AST nodes
+  strict: true, //stricter type checking
 }
 const host: ts.CompilerHost = ts.createCompilerHost(options)
 const originalGetSourceFile = host.getSourceFile.bind(host)
