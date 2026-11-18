@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 
 const program: ts.Program = ts.createProgram(["example.ts"], { strict: true })
-const checker: ts.TypeChecker = program.getTypeChecker() // The TS brain
+// const checker: ts.TypeChecker = program.getTypeChecker() // The TS brain
 const sourceFile: ts.SourceFile | undefined =
   program.getSourceFile("example.ts")!
 
@@ -9,7 +9,7 @@ ts.forEachChild(sourceFile, (node) => {
   if (ts.isVariableStatement(node)) {
     console.log(node.getText(sourceFile)) //const examples = [25, "hello", true, null]
     const declaration: ts.VariableDeclaration =
-      node.declarationList.declarations[0]
+      node.declarationList.declarations[0]!
     console.log(declaration.getText(sourceFile)) //examples = [25, "hello", true, null]
     console.log({
       kind: ts.SyntaxKind[node.kind],
