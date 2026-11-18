@@ -39,24 +39,35 @@ ts.forEachChild(sourceFile, (node) => {
           kind: ts.SyntaxKind[initializerNode.kind],
           rawText: initializerNode.getText(sourceFile), //Only literal tokens with a single raw value have .text prop.An array literal contains multiple expressions, not a single string.
           elementCount: initializerNode.elements.length, //4
-          //multiline:initializerNode.multiline ?? false,
+          //multiline:initializerNode.multiline ?? false,//multiline prop doesnt exist
           pos: initializerNode.pos,
           end: initializerNode.end,
         })
         initializerNode.elements.forEach(
-          (element: any, index: number): void => {
+          (element: ts.Expression, index: number): void => {
+            let rawText: string | undefined
+
+            if (
+              ts.isStringLiteral(element) ||
+              ts.isNumericLiteral(element) ||
+              ts.isIdentifier(element)
+            ) {
+              rawText = element.text // TypeScript now knows .text exists
+            } else {
+              rawText = element.getText() // Fallback for objects, arrays, etc.
+            }
             const info: Record<string, any> = {
               index,
               kind: ts.SyntaxKind[element.kind],
-              rawText: element.text,
+              rawText,
             }
             //specific properties based on exact literal node Type
             if (ts.isNumericLiteral(element)) {
               info.value = Number(element.text)
-              //info.numericLiteralFlags = element.numericLiteralFlags
+              //info.numericLiteralFlags = element.numericLiteralFlags //numericLiteralFlags doesnt exist on exact Literal Type Nodes
             } else if (ts.isStringLiteral(element)) {
               info.value = element.text
-              //info.singleQuote = element.singleQuote ?? false
+              //info.singleQuote = element.singleQuote ?? false //same singleQuote doesnt exist
             } else if (element.kind === ts.SyntaxKind.TrueKeyword) {
               info.value = true // Boolean keyword "dont have .text", only .kind
             } else if (element.kind === ts.SyntaxKind.NullKeyword) {
