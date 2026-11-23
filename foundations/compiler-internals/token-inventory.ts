@@ -36,3 +36,6 @@ while (token !== ts.SyntaxKind.EndOfFileToken) {
 }
 console.log("Token Counts: " + totalTokens)
 console.log("Unique categories:", tokenCounts.size)
+for (const [category, count] of tokenCounts) {
+  console.log(`${category.padEnd(35)} : ${count}`)
+}
