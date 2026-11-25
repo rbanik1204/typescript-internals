@@ -10,5 +10,5 @@ const user: UserInterface = {
   id: 1,
   name: "hello",
 }
-const anotherUser: UserAlias = user
+const anotherUser: UserAlias = user // It doesnt require source and destination to have same declaration Type
 console.log(anotherUser)
